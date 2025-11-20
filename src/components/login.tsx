@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useAuth} from "../../BS435_WebProgramlama_I/apps/2025/app2/src/AuthContext.tsx";
+import {useAuth} from './AuthContext.tsx';
 import {useNavigate} from "react-router";
 
 export const Login = () => {
