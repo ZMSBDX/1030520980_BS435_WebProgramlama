@@ -18,6 +18,7 @@ function App() {
             {isLoggedIn ? <h2>{username}</h2>:<h2>Giriş Yap</h2>}
             <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/Game" element={<Game />} />
                 <Route path="/" element={<Game />} />
             </Routes>
         </>

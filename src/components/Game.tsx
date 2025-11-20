@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext.tsx';
 
-import ModeSelectionScreen from './SettingScreen.tsx';
+import SettingScreen from './SettingScreen.tsx';
 import GameScreen from './GameScreen';
 import ResultScreen from './ResultScreen';
+
+//---------------------------------------------------------
 
 export type GameState = 'mode-select' | 'playing' | 'result';
 export type GameMode = 'classic' | 'category';
@@ -18,18 +20,21 @@ export const Game = () => {
 
     if(!isLoggedIn)
     {
-        return <>
-            <div>Lütfen giriş yapınız.</div>
-            <button onClick={handleClick}>
-                Giriş Yap
-            </button>
-        </>
+        return (
+            <>
+                <div>Lütfen giriş yapınız. Giriş yapmadan oyuna başlayamazsınız.</div>
+                <button onClick={handleClick}>
+                    Giriş Yap
+                </button>
+            </>
+        );
     }
 
-    const [gameState, setGameState] = useState<GameState>('mode-select');
-    const [currentScore, setCurrentScore] = useState(0);
-    const [gameMode, setGameMode] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(null);
+
+     const [gameState, setGameState] = useState<GameState>('mode-select');
+     const [currentScore, setCurrentScore] = useState(0);
+     const [gameMode, setGameMode] = useState(null);
+     const [selectedCategory, setSelectedCategory] = useState(null);
 
 
     if (gameState === 'mode-select')
