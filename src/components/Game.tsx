@@ -6,35 +6,33 @@ import SettingScreen from './SettingScreen.tsx';
 import GameScreen from './GameScreen';
 import ResultScreen from './ResultScreen';
 
-//---------------------------------------------------------
-
 export type GameState = 'mode-select' | 'playing' | 'result';
-export type GameMode = 'classic' | 'category';
+// 👇 'timed' BURAYA EKLENDİ
+export type GameMode = 'classic' | 'category' | 'timed';
 
 export const Game = () => {
 
     const {isLoggedIn} = useAuth();
-    const nav = useNavigate();
+    const navigate = useNavigate();
 
-    const handleClick = () => {nav("/login");}
+    const handleLoginRedirect = () => {navigate("/login");}
 
     if(!isLoggedIn)
     {
         return (
             <>
                 <div>Lütfen giriş yapınız. Giriş yapmadan oyuna başlayamazsınız.</div>
-                <button onClick={handleClick}>
+                <button onClick={handleLoginRedirect}>
                     Giriş Yap
                 </button>
             </>
         );
     }
 
-
-     const [gameState, setGameState] = useState<GameState>('mode-select');
-     const [currentScore, setCurrentScore] = useState(0);
-     const [gameMode, setGameMode] = useState(null);
-     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [gameState, setGameState] = useState<GameState>('mode-select');
+    const [currentScore, setCurrentScore] = useState(0);
+    const [gameMode, setGameMode] = useState<GameMode | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
 
     if (gameState === 'mode-select')
@@ -56,7 +54,7 @@ export const Game = () => {
     else if (gameState === 'result')
     {
         return (
-            <ResultScreen setGameState={setGameState} currentScore={currentScore}/>
+            <ResultScreen setGameState={setGameState} currentScore={currentScore} setCurrentScore={setCurrentScore}/>
         );
     }
 
