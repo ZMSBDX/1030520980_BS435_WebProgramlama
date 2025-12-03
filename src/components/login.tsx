@@ -13,7 +13,7 @@ export const Login = () => {
     const [password, setPassword] = useState('');
     const handleLogin = () => {
 
-        if(name === "123" && password === "123")
+        if(name === "" && password === "")
         {
             login("test");
             nav("/Game");
