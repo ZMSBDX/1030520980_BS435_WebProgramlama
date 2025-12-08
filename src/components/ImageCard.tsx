@@ -1,6 +1,4 @@
 import React from 'react';
-// Veri dosyasından (images.ts) ImageItem tipini alıyoruz.
-// Eğer hata verirse bu satırı silebilirsiniz, TypeScript zorunlu değilse props ile hallederiz.
 import { ImageItem } from '../data/images';
 
 const ImageCard = ({ image, onClick, isSelected, isRevealed }) => {
@@ -17,13 +15,11 @@ const ImageCard = ({ image, onClick, isSelected, isRevealed }) => {
 
     };
 
-    // Görselin çerçeve rengini belirleyen mantık
     let borderStyle = '4px solid transparent'; // Varsayılan
     if (isSelected)
     {
         borderStyle = '4px solid orange'; // Seçiliyse turuncu
     }
-    // Oyun bittiğinde:
     if (isRevealed)
     {
         if (image.isAI)

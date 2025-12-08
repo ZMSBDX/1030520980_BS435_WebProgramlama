@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { imagesData, categories } from '../data/images';
 
-// --- YARDIMCI FONKSİYON: Rastgele ve Benzersiz Görsel Seçimi ---
 const selectRandomImages = (usedIds: number[], specificCategory: string | null) => {
 
-    // 1. Havuzu Belirle: Kategori seçildiyse filtrele, yoksa hepsi
     let pool = imagesData;
     if (specificCategory) {
         pool = imagesData.filter(img => img.category === specificCategory);
     }
 
-    // 2. Henüz sorulmamış AI görsellerini bul
     let availableAIImages = pool.filter(img => img.isAI && !usedIds.includes(img.id));
 
-    // Eğer o kategorideki tüm sorular bittiyse listeyi sıfırla (döngü başa döner)
     if (availableAIImages.length === 0) {
         availableAIImages = pool.filter(img => img.isAI);
     }
 
-    // 3. Rastgele bir AI seç
     const selectedAI = availableAIImages[Math.floor(Math.random() * availableAIImages.length)];
 
-    // 4. Seçilen AI'nın kategorisinden gerçek resimleri bul
     const currentCategory = selectedAI.category;
     const realImages = pool.filter(img => !img.isAI && img.category === currentCategory);
 
@@ -29,19 +23,15 @@ const selectRandomImages = (usedIds: number[], specificCategory: string | null) 
         return { images: [], hint: "Yetersiz görsel.", aiId: 0 };
     }
 
-    // 5. Gerçekleri karıştırıp 2 tane seç
     const selectedRealImages = realImages.sort(() => Math.random() - 0.5).slice(0, 2);
 
-    // 6. Hepsini birleştir
     const gameImages = [selectedAI, ...selectedRealImages].sort(() => Math.random() - 0.5);
 
     return { images: gameImages, hint: selectedAI.hint, aiId: selectedAI.id };
 };
 
-// --- ANA COMPONENT ---
 const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory }) => {
 
-    // --- Gömülü ImageCard Componenti (DÜZGÜN BOYUTLANDIRMA) ---
     const ImageCard = ({ image, onClick, isSelected, isRevealed }) => {
         const handleClick = () => {
             if (isRevealed) return;
@@ -92,7 +82,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
         );
     };
 
-    // --- STATE TANIMLARI ---
     const TOTAL_ROUNDS = 5;
     const [currentRound, setCurrentRound] = useState(1);
 
@@ -102,13 +91,10 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
     const [selectedImageId, setSelectedImageId] = useState(null);
     const [isRoundFinished, setIsRoundFinished] = useState(false);
 
-    // Sorulan soruları takip eden state
     const [usedAIIds, setUsedAIIds] = useState<number[]>([]);
 
-    // Süreli mod için zamanlayıcı state'i
     const [timeLeft, setTimeLeft] = useState(15);
 
-    // --- YENİ TUR YÜKLEME ---
     useEffect(() => {
         const { images, hint, aiId } = selectRandomImages(usedAIIds, selectedCategory);
 
@@ -119,7 +105,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
             setUsedAIIds(prev => [...prev, aiId]);
         }
 
-        // Tur verilerini sıfırla
         setGuessAttempt(1);
         setSelectedImageId(null);
         setIsRoundFinished(false);
@@ -127,7 +112,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
     }, [currentRound]);
 
 
-    // --- ZAMANLAYICI MANTIĞI (Sadece 'timed' modunda) ---
     useEffect(() => {
         if (gameMode === 'timed' && !isRoundFinished && timeLeft > 0) {
             const timer = setInterval(() => {
@@ -135,13 +119,11 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
             }, 1000);
             return () => clearInterval(timer);
         } else if (gameMode === 'timed' && timeLeft === 0 && !isRoundFinished) {
-            // Süre bitti, turu bitir
             setIsRoundFinished(true);
         }
     }, [timeLeft, isRoundFinished, gameMode]);
 
 
-    // --- SIRADAKİ TUR ---
     const handleNextRound = () => {
         if (currentRound < TOTAL_ROUNDS) {
             setCurrentRound(prev => prev + 1);
@@ -150,7 +132,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
         }
     };
 
-    // --- TAHMİN MANTIĞI ---
     const handleImageClick = (imageId) => {
         if (isRoundFinished) return;
 
@@ -163,8 +144,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
             setIsRoundFinished(true);
         } else {
             if (guessAttempt === 1) {
-                // Süreli modda ikinci şans vermek istemezsen burayı değiştirebilirsin.
-                // Şu anki haliyle süre bitmediyse ikinci şansı veriyor.
                 setGuessAttempt(2);
                 setTimeout(() => setSelectedImageId(null), 500);
             } else {
@@ -179,7 +158,6 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
 
             <h3>Tur: {currentRound} / {TOTAL_ROUNDS}</h3>
 
-            {/* SÜRE GÖSTERGESİ (Sadece Timed Mod) */}
             {gameMode === 'timed' && (
                 <div style={{
                     color: timeLeft <= 5 ? 'red' : 'black',
@@ -191,12 +169,10 @@ const GameScreen = ({ setGameState, setCurrentScore, gameMode, selectedCategory 
                 </div>
             )}
 
-            {/* SÜRE DOLDU MESAJI */}
             {gameMode === 'timed' && timeLeft === 0 && (
                 <div style={{ color: 'red', fontWeight: 'bold', margin: '10px' }}>SÜRE DOLDU!</div>
             )}
 
-            {/* İPUCU ALANI */}
             {guessAttempt === 2 && (
                 <div style={{ backgroundColor: '#fff3cd', padding: '10px', margin: '10px auto', maxWidth: '600px', borderRadius: '5px' }}>
                     <strong>İPUCU:</strong> {hintText}

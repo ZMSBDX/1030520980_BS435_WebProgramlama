@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GameMode, GameState } from './Game.tsx';
-import { categories } from '../data/images'; // Kategorileri çekiyoruz
+import { categories } from '../data/images';
 
 interface SettingScreenProps {
     setGameState: React.Dispatch<React.SetStateAction<GameState>>;
@@ -12,14 +12,14 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
 
     const [selectedCat, setSelectedCat] = useState<string>('');
 
-    // --- 1. KLASİK MOD ---
+
     const handleStartClassicMode = () => {
         setGameMode('classic');
         setSelectedCategory(null);
         setGameState('playing');
     };
 
-    // --- 2. KATEGORİ MODU ---
+
     const handleStartCategoryMode = () => {
         if(!selectedCat) {
             alert("Lütfen önce bir kategori seçiniz!");
@@ -30,7 +30,7 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
         setGameState('playing');
     };
 
-    // --- 3. SÜRELİ MOD ---
+
     const handleStartTimedMode = () => {
         setGameMode('timed');
         setSelectedCategory(null);
@@ -41,14 +41,14 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
         <div className="setting-screen" style={{textAlign: 'center', padding: '20px'}}>
             <h2>Oyun Modunu Seç</h2>
 
-            {/* KLASİK */}
+
             <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
                 <h3>1. Klasik Mod</h3>
                 <p>Karışık kategoriler, süre sınırı yok.</p>
                 <button onClick={handleStartClassicMode}>Klasik Modu Başlat</button>
             </div>
 
-            {/* KATEGORİ */}
+
             <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
                 <h3>2. Kategori Modu</h3>
                 <p>Sadece seçtiğin kategoriden sorular gelir.</p>
@@ -65,7 +65,7 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
                 <button onClick={handleStartCategoryMode}>Kategori Modunu Başlat</button>
             </div>
 
-            {/* SÜRELİ */}
+
             <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
                 <h3>3. Süreli Mod (Zor)</h3>
                 <p>Her soru için sadece 15 saniyen var!</p>

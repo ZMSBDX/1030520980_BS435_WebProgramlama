@@ -7,7 +7,6 @@ import GameScreen from './GameScreen';
 import ResultScreen from './ResultScreen';
 
 export type GameState = 'mode-select' | 'playing' | 'result';
-// 👇 'timed' BURAYA EKLENDİ
 export type GameMode = 'classic' | 'category' | 'timed';
 
 export const Game = () => {

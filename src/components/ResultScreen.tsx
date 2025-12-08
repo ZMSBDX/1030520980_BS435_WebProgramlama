@@ -1,7 +1,6 @@
 import React from 'react';
 import { GameState } from './Game';
 
-// setCurrentScore prop'unu da ekledik
 interface ResultScreenProps {
     setGameState: React.Dispatch<React.SetStateAction<GameState>>;
     currentScore: number;
@@ -11,9 +10,7 @@ interface ResultScreenProps {
 const ResultScreen: React.FC<ResultScreenProps> = ({ setGameState, currentScore, setCurrentScore }) => {
 
     const handleRestart = () => {
-        // 1. Skoru SIFIRLA
         setCurrentScore(0);
-        // 2. Mod seçimine geri dön
         setGameState('mode-select');
     };
 
