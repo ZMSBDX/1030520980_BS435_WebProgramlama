@@ -1,27 +1,11 @@
-import { Login } from "./components/login.tsx";
-import { useAuth } from "./components/AuthContext.tsx";
-import { Route, Routes } from "react-router";
 import { Game } from "./components/Game.tsx";
 
-
 function App() {
-
-    const {
-        isLoggedIn,
-        username,
-        login,
-        logout
-    } = useAuth();
-
     return (
-        <>
-            {isLoggedIn ? <h2>{username}</h2>:<h2>Giriş Yap</h2>}
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/Game" element={<Game />} />
-                <Route path="/" element={<Game />} />
-            </Routes>
-        </>
+        <div className="App">
+            {/* Sadece Oyunu Çağırıyoruz, başka hiçbir şeye gerek yok */}
+            <Game />
+        </div>
     )
 }
 

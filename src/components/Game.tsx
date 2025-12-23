@@ -1,64 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext.tsx';
+import React, { useState } from 'react';
 
-import SettingScreen from './SettingScreen.tsx';
+// Component importları
+import WelcomeScreen from './WelcomeScreen';
+import SettingScreen from './SettingScreen';
 import GameScreen from './GameScreen';
 import ResultScreen from './ResultScreen';
 
-export type GameState = 'mode-select' | 'playing' | 'result';
+// Oyun Durumları: Artık 'welcome' ile başlıyoruz
+export type GameState = 'welcome' | 'mode-select' | 'playing' | 'result';
 export type GameMode = 'classic' | 'category' | 'timed';
 
 export const Game = () => {
 
-    const {isLoggedIn} = useAuth();
-    const navigate = useNavigate();
+    // Login kontrolü (useAuth) TAMAMEN KALDIRILDI.
 
-    const handleLoginRedirect = () => {navigate("/login");}
+    // Başlangıç durumu artık 'welcome'
+    const [gameState, setGameState] = useState<GameState>('welcome');
 
-    if(!isLoggedIn)
-    {
-        return (
-            <>
-                <div>Lütfen giriş yapınız. Giriş yapmadan oyuna başlayamazsınız.</div>
-                <button onClick={handleLoginRedirect}>
-                    Giriş Yap
-                </button>
-            </>
-        );
-    }
-
-    const [gameState, setGameState] = useState<GameState>('mode-select');
     const [currentScore, setCurrentScore] = useState(0);
     const [gameMode, setGameMode] = useState<GameMode | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+    // --- 1. KARŞILAMA EKRANI ---
+    if (gameState === 'welcome') {
+        return <WelcomeScreen setGameState={setGameState} />;
+    }
 
-    if (gameState === 'mode-select')
-    {
+    // --- 2. AYAR / MOD SEÇİM EKRANI ---
+    else if (gameState === 'mode-select') {
         return (
-            <SettingScreen setGameState={setGameState} setGameMode={setGameMode} setSelectedCategory={setSelectedCategory}/>
+            <SettingScreen
+                setGameState={setGameState}
+                setGameMode={setGameMode}
+                setSelectedCategory={setSelectedCategory}
+            />
         );
     }
 
+    // --- 3. OYUN EKRANI ---
     else if (gameState === 'playing') {
-        if (!gameMode)
-        {
-            return <div>Hata: Oyun modu belirlenmemiş.</div>;
-        }
-        return (<GameScreen setGameState={setGameState} setCurrentScore={setCurrentScore} gameMode={gameMode} selectedCategory={selectedCategory}/>
-        );
-    }
+        if (!gameMode) return <div>Hata: Oyun modu seçilmedi.</div>;
 
-    else if (gameState === 'result')
-    {
         return (
-            <ResultScreen setGameState={setGameState} currentScore={currentScore} setCurrentScore={setCurrentScore}/>
+            <GameScreen
+                setGameState={setGameState}
+                setCurrentScore={setCurrentScore}
+                gameMode={gameMode}
+                selectedCategory={selectedCategory}
+            />
         );
     }
 
-    else
-    {
-        return <div>Oyun durumu beklenmedik bir değerde.</div>;
+    // --- 4. SONUÇ EKRANI ---
+    else if (gameState === 'result') {
+        return (
+            <ResultScreen
+                setGameState={setGameState}
+                currentScore={currentScore}
+                setCurrentScore={setCurrentScore}
+            />
+        );
+    }
+
+    else {
+        return <div>Beklenmedik hata.</div>;
     }
 };
