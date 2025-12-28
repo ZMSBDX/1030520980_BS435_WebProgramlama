@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { GameMode, GameState } from './Game.tsx';
+import { GameMode, GameState } from './Game';
 import { categories } from '../data/images';
+import './SettingScreen.css'; // <--- CSS dosyasını dahil ettik
 
 interface SettingScreenProps {
     setGameState: React.Dispatch<React.SetStateAction<GameState>>;
@@ -12,13 +13,11 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
 
     const [selectedCat, setSelectedCat] = useState<string>('');
 
-
     const handleStartClassicMode = () => {
         setGameMode('classic');
         setSelectedCategory(null);
         setGameState('playing');
     };
-
 
     const handleStartCategoryMode = () => {
         if(!selectedCat) {
@@ -30,7 +29,6 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
         setGameState('playing');
     };
 
-
     const handleStartTimedMode = () => {
         setGameMode('timed');
         setSelectedCategory(null);
@@ -38,38 +36,61 @@ const SettingScreen: React.FC<SettingScreenProps> = ({ setGameState, setGameMode
     };
 
     return (
-        <div className="setting-screen" style={{textAlign: 'center', padding: '20px'}}>
-            <h2>Oyun Modunu Seç</h2>
+        <div className="setting-container">
+            <h2 className="setting-title">Oyun Modunu Seç</h2>
 
+            <div className="modes-grid">
 
-            <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
-                <h3>1. Klasik Mod</h3>
-                <p>Karışık kategoriler, süre sınırı yok.</p>
-                <button onClick={handleStartClassicMode}>Klasik Modu Başlat</button>
-            </div>
+                {/* 1. KART: KLASİK MOD */}
+                <div className="mode-card">
+                    <div className="mode-icon">🎮</div>
+                    <h3 className="mode-header">Klasik Mod</h3>
+                    <p className="mode-desc">
+                        Karışık kategorilerden sorular gelir. Süre sınırı yoktur, rahatça oynayabilirsin.
+                    </p>
+                    <button className="mode-btn btn-blue" onClick={handleStartClassicMode}>
+                        Klasik Modu Başlat
+                    </button>
+                </div>
 
+                {/* 2. KART: KATEGORİ MODU */}
+                <div className="mode-card">
+                    <div className="mode-icon">📂</div>
+                    <h3 className="mode-header">Kategori Modu</h3>
+                    <p className="mode-desc">
+                        Sadece senin seçtiğin alandan (Hayvan, Manzara vb.) sorular gelir.
+                    </p>
 
-            <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
-                <h3>2. Kategori Modu</h3>
-                <p>Sadece seçtiğin kategoriden sorular gelir.</p>
-                <select
-                    value={selectedCat}
-                    onChange={(e) => setSelectedCat(e.target.value)}
-                    style={{marginRight: '10px', padding: '5px'}}
-                >
-                    <option value="">-- Kategori Seç --</option>
-                    {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat.toUpperCase()}</option>
-                    ))}
-                </select>
-                <button onClick={handleStartCategoryMode}>Kategori Modunu Başlat</button>
-            </div>
+                    <select
+                        className="category-select"
+                        value={selectedCat}
+                        onChange={(e) => setSelectedCat(e.target.value)}
+                    >
+                        <option value="">-- Kategori Seç --</option>
+                        {categories.map(cat => (
+                            <option key={cat} value={cat}>
+                                {cat.charAt(0).toUpperCase() + cat.slice(1)} {/* Baş harfi büyüt */}
+                            </option>
+                        ))}
+                    </select>
 
+                    <button className="mode-btn btn-blue" onClick={handleStartCategoryMode}>
+                        Kategori Modunu Başlat
+                    </button>
+                </div>
 
-            <div className="mode-setting" style={{marginBottom: '20px', border: '1px solid #ccc', padding: '10px'}}>
-                <h3>3. Süreli Mod (Zor)</h3>
-                <p>Her soru için sadece 15 saniyen var!</p>
-                <button onClick={handleStartTimedMode} style={{backgroundColor: '#dc3545', color: 'white'}}>Süreli Modu Başlat</button>
+                {/* 3. KART: SÜRELİ MOD */}
+                <div className="mode-card">
+                    <div className="mode-icon">⏳</div>
+                    <h3 className="mode-header">Süreli Mod (Zor)</h3>
+                    <p className="mode-desc">
+                        Kendine güveniyor musun? Her soru için sadece <strong>15 saniyen</strong> var!
+                    </p>
+                    <button className="mode-btn btn-red" onClick={handleStartTimedMode}>
+                        Süreli Modu Başlat
+                    </button>
+                </div>
+
             </div>
         </div>
     );
